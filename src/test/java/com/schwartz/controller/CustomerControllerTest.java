@@ -6,7 +6,6 @@ import com.schwartz.domain.CustomerResponseDTO;
 import com.schwartz.exceptions.BusinessException;
 import com.schwartz.repository.CustomerRepository;
 import com.schwartz.service.CustomerService;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,13 +13,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,14 +31,15 @@ class CustomerControllerTest {
     @Mock
     CustomerRepository customerRepository;
     private MockMvc mockMvc;
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
+
     @BeforeEach
-    public  void init() {
+    public void init() {
         mockMvc = MockMvcBuilders.standaloneSetup(customerController).alwaysDo(print()).build();
         mapper = new ObjectMapper();
     }
 
-    private  CustomerRequestDTO getCustomer() {
+    private CustomerRequestDTO getCustomer() {
         CustomerRequestDTO c = new CustomerRequestDTO();
         c.setId(1L);
         c.setEmail("email@gmail.com");
@@ -50,7 +47,7 @@ class CustomerControllerTest {
         return c;
     }
 
-    private  CustomerResponseDTO getCustomerDTO() {
+    private CustomerResponseDTO getCustomerDTO() {
         CustomerResponseDTO c = new CustomerResponseDTO();
         c.setId(1L);
         c.setEmail("email@gmail.com");
@@ -62,7 +59,7 @@ class CustomerControllerTest {
         Mockito.when(service.create(getCustomer()))
                 .thenReturn(getCustomerDTO());
 
-        mockMvc.perform(MockMvcRequestBuilders.post(RESOURCE )
+        mockMvc.perform(MockMvcRequestBuilders.post(RESOURCE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(getCustomer()))
                 .accept(MediaType.APPLICATION_JSON))
